@@ -1,2 +1,2 @@
 #!/bin/bash
-IFS=":" read -ra PATH_ARRAY <<< "$PATH" count=${#PATH_ARRAY[@]} Print the count echo "$count"
+echo $(('echo  $PATH | grep -o ":/" | wc -1' +1))
