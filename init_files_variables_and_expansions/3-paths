@@ -1,10 +1,2 @@
 #!/bin/bash
-
-# Split the PATH variable using ":" as the delimiter
-IFS=":" read -ra PATH_ARRAY <<< "$PATH"
-
-# Count the number of elements in the PATH array
-count=${#PATH_ARRAY[@]}
-
-# Print the count
-echo "$count"
+IFS=":" read -ra PATH_ARRAY <<< "$PATH" count=${#PATH_ARRAY[@]} Print the count echo "$count"
