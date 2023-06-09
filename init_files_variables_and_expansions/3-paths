@@ -1,2 +1,10 @@
 #!/bin/bash
-echo $(('echo $PATH | grep -o ":/" | wc -1' +1))
+
+# Split the PATH variable using ":" as the delimiter
+IFS=":" read -ra PATH_ARRAY <<< "$PATH"
+
+# Count the number of elements in the PATH array
+count=${#PATH_ARRAY[@]}
+
+# Print the count
+echo "$count"
