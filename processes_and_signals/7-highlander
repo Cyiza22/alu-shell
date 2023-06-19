@@ -5,7 +5,6 @@
 
 # Function to handle SIGTERM signal
 handle_sigterm() {
-    echo "I am invincible!!!"
     exit 0
 }
 
@@ -27,7 +26,6 @@ if [[ "$(basename "$0")" == "67-stop_me_if_you_can" ]]; then
 else
     # Infinite loop
     while true; do
-        echo "To infinity and beyond"
         sleep 2
     done
 fi
