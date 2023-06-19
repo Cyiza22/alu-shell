@@ -1,25 +1,33 @@
 #!/usr/bin/env bash
 
-# Script: list_processes.sh
-# Description: Displays a list of currently running processes, including process hierarchy, in a user-oriented format.
-
-# Formatting options
-header="USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND"
-format="%-10s %5s %4s %4s %6s %5s %-6s %4s %5s %s\n"
+# This script displays a list of currently running processes.
 
 # Display the header
-echo "$header"
+printf "%-8s %-8s %-4s %-4s %-8s %-8s %-4s %-8s %-10s\n" "USER" "PID" "%CPU" "%MEM" "VSZ" "RSS" "TTY" "STAT" "COMMAND"
 
-# Get the list of processes using the 'ps' command with the desired options
-ps_output=$(ps axo user,pid,%cpu,%mem,vsz,rss,tty,stat,start,time,command)
-
-# Process each line of the 'ps' output
+# Iterate over each process
 while IFS= read -r line; do
-  # Exclude the header line
-  if [[ $line != "USER"* ]]; then
-    # Parse the process information using whitespace as the delimiter
-    read -r user pid cpu mem vsz rss tty stat start time command <<< "$line"
-    # Print the formatted process information
-    printf "$format" "$user" "$pid" "$cpu" "$mem" "$vsz" "$rss" "$tty" "$stat" "$start" "$time" "$command"
+  # Parse process information
+  user=$(echo "$line" | awk '{print $1}')
+  pid=$(echo "$line" | awk '{print $2}')
+  cpu=$(echo "$line" | awk '{print $3}')
+  mem=$(echo "$line" | awk '{print $4}')
+  vsz=$(echo "$line" | awk '{print $5}')
+  rss=$(echo "$line" | awk '{print $6}')
+  tty=$(echo "$line" | awk '{print $7}')
+  stat=$(echo "$line" | awk '{print $8}')
+  command=$(echo "$line" | awk '{print $9}')
+
+  # Indentation based on process hierarchy
+  indentation=""
+  if [[ $pid -ne 1 ]]; then
+    ppid=$(echo "$line" | awk '{print $10}')
+    while [[ $ppid -ne 0 ]]; do
+      indentation+="  "
+      ppid=$(ps -o ppid= -p "$ppid")
+    done
   fi
-done <<< "$ps_output"
+
+  # Display the process information
+  printf "%-8s %-8s %-4s %-4s %-8s %-8s %-4s %-8s %-10s\n" "$user" "$pid" "$cpu" "$mem" "$vsz" "$rss" "$tty" "$stat" "$indentation$command"
+done < <(ps -ef --no-headers)
