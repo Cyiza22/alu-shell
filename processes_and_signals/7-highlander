@@ -5,7 +5,7 @@
 
 # Function to handle SIGTERM signal
 handle_sigterm() {
-	echo "OK"
+    echo "OK"
     exit 0
 }
 
