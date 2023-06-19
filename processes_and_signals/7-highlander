@@ -5,8 +5,8 @@
 
 # Function to handle SIGTERM signal
 handle_sigterm() {
-    echo "OK"
-    exit 1
+    echo "I am invincible!!!"
+    exit 0
 }
 
 # Trap SIGTERM signal and call the handler function
