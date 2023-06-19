@@ -6,7 +6,6 @@
 # Function to handle SIGTERM signal
 handle_sigterm() {
     echo "OK"
-    exit 0
 }
 
 # Trap SIGTERM signal and call the handler function
