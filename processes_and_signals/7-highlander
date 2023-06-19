@@ -27,6 +27,5 @@ if [[ "$(basename "$0")" == "67-stop_me_if_you_can" ]]; then
 else
     # Infinite loop
     while true; do
-        sleep 1
     done
 fi
