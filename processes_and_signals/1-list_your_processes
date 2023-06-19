@@ -1,7 +1,25 @@
 #!/usr/bin/env bash
 
-# This script displays a list of currently running processes.
-# It shows all processes for all users, including those without a TTY.
-# The output is displayed in a user-oriented format, including the process hierarchy.
+# Script: list_processes.sh
+# Description: Displays a list of currently running processes, including process hierarchy, in a user-oriented format.
 
-ps axjf
+# Formatting options
+header="USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND"
+format="%-10s %5s %4s %4s %6s %5s %-6s %4s %5s %s\n"
+
+# Display the header
+echo "$header"
+
+# Get the list of processes using the 'ps' command with the desired options
+ps_output=$(ps axo user,pid,%cpu,%mem,vsz,rss,tty,stat,start,time,command)
+
+# Process each line of the 'ps' output
+while IFS= read -r line; do
+  # Exclude the header line
+  if [[ $line != "USER"* ]]; then
+    # Parse the process information using whitespace as the delimiter
+    read -r user pid cpu mem vsz rss tty stat start time command <<< "$line"
+    # Print the formatted process information
+    printf "$format" "$user" "$pid" "$cpu" "$mem" "$vsz" "$rss" "$tty" "$stat" "$start" "$time" "$command"
+  fi
+done <<< "$ps_output"
