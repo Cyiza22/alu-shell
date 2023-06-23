@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
+# This script lists all currently running processes, including process hierarchy.
 
-# This script displays a list of currently running processes.
-
-# Display the header
-printf "%-8s %-8s %-4s %-4s %-8s %-8s %-4s %-8s %-10s\n" "USER" "PID" "%CPU" "%MEM" "VSZ" "RSS" "TTY" "STAT" "COMMAND"
+# Define the column headers
+printf "%-8s %-5s %-5s %-8s %-8s %-4s %-10s %-5s %s\n" "USER" "PID" "%CPU" "%MEM" "VSZ" "RSS" "TTY" "STAT" "COMMAND"
 
 # Iterate over each process
 while IFS= read -r line; do
-  # Parse process information
+  # Extract the relevant process information
   user=$(echo "$line" | awk '{print $1}')
   pid=$(echo "$line" | awk '{print $2}')
   cpu=$(echo "$line" | awk '{print $3}')
@@ -18,16 +17,13 @@ while IFS= read -r line; do
   stat=$(echo "$line" | awk '{print $8}')
   command=$(echo "$line" | awk '{print $9}')
 
-  # Indentation based on process hierarchy
-  indentation=""
-  if [[ $pid -ne 1 ]]; then
-    ppid=$(echo "$line" | awk '{print $10}')
-    while [[ $ppid -ne 0 ]]; do
-      indentation+="  "
-      ppid=$(ps -o ppid= -p "$ppid")
-    done
-  fi
+  # Indent the command based on the process hierarchy level
+  indent=$(echo "$line" | awk '{print substr($0, index($0,$9))}')
+  command="$indent$command"
 
-  # Display the process information
-  printf "%-8s %-8s %-4s %-4s %-8s %-8s %-4s %-8s %-10s\n" "$user" "$pid" "$cpu" "$mem" "$vsz" "$rss" "$tty" "$stat" "$indentation$command"
-done < <(ps -ef --no-headers)
+  # Print the formatted process information
+  printf "%-8s %-5s %-5s %-8s %-8s %-4s %-10s %-5s %s\n" "$user" "$pid" "$cpu" "$mem" "$vsz" "$rss" "$tty" "$stat" "$command"
+
+done < <(ps ax -o user,pid,%cpu,%mem,vsz,rss,tty,stat,comm --forest --no-headers)
+
+exit 0
