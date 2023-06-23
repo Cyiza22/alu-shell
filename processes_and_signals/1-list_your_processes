@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # This script lists all currently running processes, including process hierarchy.
 
-printf "%-8s %-5s %-5s %-8s %-8s %-4s %-10s %-5s %s\n" "USER" "PID" "%CPU" "%MEM" "VSZ" "RSS" "TTY" "STAT" "COMMAND"
+printf "%-8s %-5s %-5s %-8s %-8s %-4s %-10s %-5s %s\n" "USER" "PID" "%CPU" "%MEM" "VSZ" "RSS" "TTT" "COMMAND"
 while IFS= read -r line; do
   # Extract the relevant process information
   user=$(echo "$line" | awk '{print $1}')
