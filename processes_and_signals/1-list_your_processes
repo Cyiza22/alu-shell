@@ -2,10 +2,10 @@
 # This script lists all currently running processes, including process hierarchy.
 
 # Define the column headers
-printf "%-8s %-5s %-5s %-8s %-8s %-4s %-10s %-5s %s\n" "USER" "PID" "%CPU" "%MEM" "VSZ" "RSS" "TTY" "STAT" "COMMAND"
+printf "%-8s %s\n" "USER" "COMMAND"
 
 # Get the process information using ps command
-ps ax -o user,pid,%cpu,%mem,vsz,rss,tty,stat,command --forest --no-headers |
+ps -eo user,cmd --forest --no-headers |
 while IFS= read -r line; do
   # Print the formatted process information
   printf "%s\n" "$line"
