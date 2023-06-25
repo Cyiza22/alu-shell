@@ -1,14 +1,3 @@
 #!/usr/bin/env bash
-# This script lists all currently running processes, including process hierarchy.
-
-# Define the column headers
-printf "%-8s %s\n" "USER" "COMMAND"
-
-# Get the process information using ps command
-ps -eo user,cmd --forest --no-headers |
-while IFS= read -r line; do
-  # Print the formatted process information
-  printf "%s\n" "$line"
-done
-
-exit 0
+#display all processes
+ps -faux
