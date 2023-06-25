@@ -1,32 +1,11 @@
 #!/usr/bin/env bash
-# This script displays 'To infinity and beyond' indefinitely with a sleep of 2 seconds between each iteration
-# It also prints 'I am invincible!!!' when receiving a SIGTERM signal
-# Additionally, it stops the '7-highlander' process when executed with the name '67-stop_me_if_you_can'
+#This script displays
+#to infinity and beyond indefinitely
+#with a sleep 2 in between each iteration
+#I am invincible!!! when receiving a SIGTERM signal
 
-# Function to handle SIGTERM signal
-handle_sigterm() {
-    echo "OK"
-    exit 0
-}
-
-# Trap SIGTERM signal and call the handler function
-trap 'handle_sigterm' SIGTERM
-
-# Check if the script is running as '67-stop_me_if_you_can'
-if [[ "$(basename "$0")" == "67-stop_me_if_you_can" ]]; then
-    # Find the PID of the '7-highlander' process
-    pid=$(pgrep -f "7-highlander")
-
-    # Check if the process is running
-    if [ -n "$pid" ]; then
-        # Send the SIGTERM signal to the process
-        kill -TERM "$pid"
-    else
-        echo "Process not found"
-    fi
-else
-    # Infinite loop
-    while true; do 
-	    sleep 2
-    done
-fi
+trap 'echo "I am invincible!!!"' 15
+while true; do
+	echo "To infinity and beyond"
+	sleep 2
+done
