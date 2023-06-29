@@ -1,52 +1,27 @@
 #!/usr/bin/env bash
-# Script: 11-manage_my_process
-# Description: This script manages the manage_my_process script by starting, stopping, or restarting it.
-
-PID_FILE="/var/run/my_process.pid"
-PROCESS_NAME="manage_my_process"
-
-start_process() {
-    if [ -f "$PID_FILE" ]; then
-        echo "$PROCESS_NAME is already running."
-        exit 1
-    fi
-    
+# Manage Processes
+startme()
+{
     ./manage_my_process &
-    echo $! > "$PID_FILE"
-    echo "$PROCESS_NAME started"
+    echo "$!" > /var/run/my_process.pid
 }
-
-stop_process() {
-    if [ ! -f "$PID_FILE" ]; then
-        echo "$PROCESS_NAME is not running."
-        exit 1
-    fi
-    
-    pid=$(cat "$PID_FILE")
-    kill "$pid"
-    rm "$PID_FILE"
-    echo "$PROCESS_NAME stopped"
+stopme()
+{
+    sudo kill -15 "$(cat /var/run/my_process.pid)"
+    rm -f /var/run/my_process.pid
 }
-
-restart_process() {
-    stop_process
-    start_process
-    echo "$PROCESS_NAME restarted"
-}
-
 case "$1" in
-    start)
-        start_process
-        ;;
-    stop)
-        stop_process
-        ;;
-    restart)
-        restart_process
-        ;;
-    *)
-        echo "Usage: $0 {start|stop|restart}"
-        exit 1
-        ;;
+    start) startme
+	   echo "manage_my_process started"
+	   ;;
+    stop) stopme
+	  echo "manage_my_process stopped"
+	  ;;
+    restart) stopme
+	     startme
+             echo "manage_my_process restarted"
+	     ;;
+    *) echo "Usage: manage_my_process {start|stop|restart}"
+       ;;
 esac
-
+exit 0
